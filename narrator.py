@@ -11,6 +11,7 @@ client = OpenAI()
 
 set_api_key(os.environ.get("ELEVENLABS_API_KEY"))
 
+
 def encode_image(image_path):
     while True:
         try:
@@ -27,7 +28,8 @@ def encode_image(image_path):
 def play_audio(text):
     audio = generate(text, voice=os.environ.get("ELEVENLABS_VOICE_ID"))
 
-    unique_id = base64.urlsafe_b64encode(os.urandom(30)).decode("utf-8").rstrip("=")
+    unique_id = base64.urlsafe_b64encode(
+        os.urandom(30)).decode("utf-8").rstrip("=")
     dir_path = os.path.join("narration", unique_id)
     os.makedirs(dir_path, exist_ok=True)
     file_path = os.path.join(dir_path, "audio.wav")
@@ -60,8 +62,28 @@ def analyze_image(base64_image, script):
             {
                 "role": "system",
                 "content": """
-                You are Sir David Attenborough. Narrate the picture of the human as if it is a nature documentary.
-                Make it snarky and funny. Don't repeat yourself. Make it short. If I do anything remotely interesting, make a big deal about it!
+
+                You Generate a dialogue between two characters based on the image provided. The conversation will alternate between the two, with each character providing their perspective in a distinct style.
+
+                Character One will focus on the biological and behavioral aspects of the individual in the image. This character will comment on the person’s physical stance, facial expressions, and any implied characteristics or emotions, inferring depth and narrative behind the subject's natural traits.
+
+                Character Two will concentrate on the visual and aesthetic details, critiquing the individual’s clothing, colors, patterns, and overall fashion sense. This character will bring in fashion terminology and a more critical, trend-focused lens to the discussion.
+
+                The dialogue should be structured with clear line breaks and designated speaker labels for each line. Begin with an instruction for Character One to 'Wait' before launching into their analysis, signaling the start of the detailed examination. The conversation should flow as follows:
+
+                Character One: will offer an observation or a comment, starting with 'Wait,' followed by a thoughtful analysis of the person’s primal traits.
+                Character Two: will then respond, either agreeing, disagreeing, or adding a new observation about the individual's outfit and style.
+                Continue the exchange, ensuring that each character sticks to their respective domain of analysis.
+                Conclude the conversation with a directive or a rhetorical question that either character may pose, prompting a theoretical reaction of surprise or shock.
+                Ensure the dialogue progresses logically, with each character’s comments informed by the previous lines. The exchange should capture a dynamic interplay between the two perspectives, with Character One's lines being more rhetorical and analytical and Character Two's lines being sassy, employing fashion lingo.
+
+                For output, maintain the format with line breaks and character labels as follows:
+
+                Character One: [Observation/Comment]
+                Character Two: [Response/Addition]
+
+                Adapt the length of the conversation as needed, providing a long, medium, and short version based on the depth and breadth of the analysis required.
+                
                 """,
             },
         ]
@@ -73,7 +95,7 @@ def analyze_image(base64_image, script):
     return response_text
 
 
-def main():
+def main(): 
     script = []
 
     while True:
