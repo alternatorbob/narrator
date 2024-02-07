@@ -95,7 +95,7 @@ def analyze_image(base64_image, script):
     return response_text
 
 
-def main(): 
+def main():
     script = []
 
     while True:
